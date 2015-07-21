@@ -1,0 +1,27 @@
+##Sendemail OPTIONS
+#binary
+SENDEMAIL="sendEmail.pl"
+#fromaddress
+FROMADRESS="dbverify@$HOSTNAME"
+#server
+MAILSERVER="smtp-sap.grupo.ypf.com"
+#mailto
+MAILTO="mariano.a.luna@set.ypf.com"
+
+##Directory backup
+SAPBACKUP="$HOME/sapbackup"
+
+##Archivos verify
+CHECKDBVERIFY="*.dbv"
+
+##SAPSID
+SAPSID=`id -a|awk -F"(" '{print $2}'|awk -F")" '{print $1}'`
+
+##Logfile
+LOGFILE=$0.log
+
+##Fecha
+fecha=$(date +%Y-%m-%d.%H:%M:%S)
+
+##Hostname
+hostname=$(hostname)
