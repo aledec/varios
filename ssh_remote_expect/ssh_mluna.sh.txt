@@ -1,0 +1,2 @@
+monitor01|192.168.200.2|linux|chile|mluna
+firewall|192.168.4.2|linux|brasil|mluna
