@@ -1,0 +1,14 @@
+------------------------------------
+Carpeta produccion
+ actualizar_hosts_produccion_sap.sh*
+  Saca el listado de impresoras del fichero /etc/hosts
+ rsync_update_hosts.sh*
+  Sincroniza el listado de impresoras del fichero /etc/hosts al host remoto, e invoca script de update en host remoto
+------------------------------------
+Carpeta Contingencia
+ actualizar_hosts_contingencia_impresoras_sap.sh*
+  Actualiza el fichero /etc/hosts, removiendo del anterior hosts las impresoras actuales, y actualizando con las nuevas.
+------------------------------------
+Carpeta Pruebas
+ Ficheros utilizados para pruebas.
+------------------------------------
