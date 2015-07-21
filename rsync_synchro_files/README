@@ -1,0 +1,10 @@
+rsync_synchro_files.sh
+ Sincroniza directorios via rsync deacuerdo a un listado de directorios/archivos en un fichero, por cada servidor destino
+
+Uso: ./rsync_synchro_files.sh [configurationfile] [option]
+     ./rsync_synchro_files.sh conf/server01.conf -v
+ 
+ # Parametros
+      [configurationfile]: Server Name configuration file
+      [option]:
+        -v: Verbose
