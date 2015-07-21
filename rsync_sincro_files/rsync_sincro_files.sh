@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash -x
 
 ###########################################################################
 #### FUNCIONES
@@ -6,7 +6,7 @@
 
 function recorrer ()
 {
-for line in $(cat $CONFIGUARTION.include)
+for line in $(cat $CONFIGURATION.include)
 do
         if [[ $line =~ "#" ]];then
                 continue
@@ -21,7 +21,9 @@ function rsyncf ()
         #Server and user variables are been imported from configuration file
 	FILEPATH=$1
 	DSTFILEPATH=$2
-	$RSYNCBIN $OPTION $RSYNCOPTIONS --include '$FILEPATH' $USERNAME@$REMOTESERVERNAME:$DSTFILEPATH
+	 $RSYNCBIN $OPTION $RSYNCOPTIONS $FILEPATH $USERNAME@$REMOTESERVERNAME:$DSTFILEPATH
+#echo $FILEPATH
+#echo $DSTFILEPATH
 }
 
 #### Mostrar ayuda
@@ -46,13 +48,13 @@ if [ $# -lt 1 ]; then
         ayuda
 else
         CONFIGURATION=$1
-	OPTION=$2
-	if [ -z $CONFIGURATION ]; then
+	#OPTION=$2
+	if [ -e $CONFIGURATION ]; then
         	source $CONFIGURATION
 		recorrer
 	fi
-	if [ $OPTION != "-v" ]; then
-		echo -en '\E[47;31m'"\033[1m ERROR - Ingreso de opcion incorrecta \033[0m\n"
-		ayuda
-	fi
+	#if [ -z $OPTION] && [ $OPTION != '-v' ]; then
+		#echo -en '\E[47;31m'"\033[1m ERROR - Ingreso de opcion incorrecta \033[0m\n"
+		#ayuda
+	#fi
 fi
