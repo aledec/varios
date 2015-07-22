@@ -1,3 +1,5 @@
-orion01|127.0.0.1|linux|argentina|user01|passworduser01|passwordroot01
-orion02|127.0.0.1|linux|argentina|user02|passworduser02|passwordroot02
-orion03|127.0.0.1|linux|argentina|user03|passworduser03|passwordroot03
+#orion01|127.0.0.1|linux|argentina|user01|passworduser01|passwordroot01
+#orion02|127.0.0.1|linux|argentina|user02|passworduser02|passwordroot02
+#orion03|127.0.0.1|linux|argentina|user03|passworduser03|passwordroot03
+jackoneil|10.4.8.14|linux|argentina|aledec|RSZ26mw|pepe
+dedalous|10.4.8.1|linux|canada|root|pepe|pepe

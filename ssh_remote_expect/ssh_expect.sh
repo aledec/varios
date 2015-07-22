@@ -217,6 +217,7 @@ function execssh ()
         if [ "$USER" == "root" ];then
           if  [ "$EXEC" == "${halt/reboot/shutdown/init/}" ]; then
            echo -en '\E[47;31m'"\033[1m ERROR 876 - BRAIN NOT FOUND \033[0m\n"
+		echo -en '\E[47;31m'"\033[1m You didnt say the magic world. $EXEC not allow  \033[0m\n"
            ayuda
            exit 2
           else

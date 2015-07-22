@@ -4,7 +4,7 @@ PRINTERFILE=/etc/hosts.printers
 ACTUALDATE=`date +%Y%m%d%H%M`
 
 #Substract strings containing printer definition 
-sed '/## INICIO Definicion de impresoras/,/## FIN Definicion de impresoras/!d'i $HOSTFILE > $PRINTERFILE
+sed '/## INICIO Definicion de impresoras/,/## FIN Definicion de impresoras/!d' $HOSTFILE > $PRINTERFILE
 
 if [ $(wc -l $PRINTERFILE) -lt 2) ]; then
 	echo "Error en la generacion del fichero hosts"
