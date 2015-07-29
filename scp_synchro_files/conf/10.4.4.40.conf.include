@@ -1,0 +1,3 @@
+/var/spool|/var/spool
+/etc/lp|/etc/lp
+#/usr/sap/SID/SYS/global|/usr/sap/SID/SYS/global
