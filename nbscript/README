@@ -1,0 +1,37 @@
+Script que automatiza ciertas tareas de netbackup, diseñado para el area de operaciones
+
+ Herramientas de Netbackup
+
+****************** Listados configuraciones Clientes/Politicas ******************
+ 1.   Listado Clientes Backup 
+ 2.   Listado Clientes Backup Detallado 
+ 3.   Listado Politicas Backup 
+ 4.   Listado Politicas Backup Detallado 
+ 5.   Listado Politicas Backup de cliente especifico
+
+****************** JOBS  ******************
+
+****************** REPORTES  ******************
+ 30.   Listado ultimos 7 dias backup del cliente <clientname> 
+ 31.   Listado ultimos 30 dias backup del cliente <clientname> 
+ 32.   Reporte resultados backups ultimas 24horas 
+ 33.   Reporte resultados backups ultimos 7 dias 
+ 34.   Reporte resultados backups fallidos en las ultimas 24horas
+ 35.   Reporte resultados backups fallidos en las ultimos 7 dias
+ 36.   Errores presentados en los backups de las ultimas 24horas 
+ 37.   Errores presentados en los backups de los ultimos 7 dias 
+ 38.   Errores presentados en los backups del <clientename> de los ultimos 7 dias 
+ 39.   Errores presentados en los backups del <clientename> de los ultimos 30 dias 
+ 40.   Listado de imagenes de backup por policy 
+
+****************** MEDIA  ******************
+ 50.   Listado completo de MEDIA disponibles en el servidor 
+ 51.   Listado detallado del contenido de una media [Requiere montarla en robot] 
+ 52.   Listado detallado del contenido de una media - IMAGENES [Requiere montarla en robot] 
+
+****************** Recovery options  ******************
+ 100.   Chequear conectividad con cliente <ip> / hostname 
+ 101.   Detener Netbackup 
+ 102.   Iniciar Netbackup 
+ 102.   Mostrar procesos netbackup 
+ 103.   Volver a cargar configuracion Netbackup sin reiniciar 
