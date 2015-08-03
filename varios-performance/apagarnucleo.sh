@@ -2,4 +2,8 @@
 echo 0 | tee /sys/devices/system/cpu/cpu1/online
 echo 0 | tee /sys/devices/system/cpu/cpu2/online
 echo 0 | tee /sys/devices/system/cpu/cpu3/online
-echo "Nucleo N\1,2,3 apagado"
+echo 0 | tee /sys/devices/system/cpu/cpu4/online
+echo 0 | tee /sys/devices/system/cpu/cpu5/online
+echo 0 | tee /sys/devices/system/cpu/cpu6/online
+echo 0 | tee /sys/devices/system/cpu/cpu7/online
+echo "Nucleo N\1,2,3,4,5,6,7 apagado"
