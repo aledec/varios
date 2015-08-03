@@ -12,7 +12,7 @@ DSTDIRECTORY="/etc/"
 PRINTERFILE=/etc/hosts.printers
 
 #Execute copy . User must have access to destination path
-rsync -v -e ssh $PRINTERFILE $USERNAME@$SERVERNAME:$DSTDIRECTORY
+scp $PRINTERFILE $USERNAME@$SERVERNAME:$DSTDIRECTORY
 if [ $? -ne 0 ]; then
         echo "Error en la copia del fichero hosts"
         exit 1
