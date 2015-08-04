@@ -1,16 +1,25 @@
-#!/usr/bin/ksh
+#!/usr/bin/ksh 
 ORG=$1
-source conf/nbscript.conf
+. ./conf/nbscript.conf
 #source conf/senders.conf
 
+##################################################################
+## Funciones especificas
+##################################################################
+# read var
+read() {
+  stty -icanon -echo
+  eval "$1=\$(dd bs=1 count=1 2>/dev/null)"
+  stty icanon echo
+}
 
 ##################################################################
 ## Reportes
 ##################################################################
-function reporte_mail(){
-read -p "Desea enviar por correo el fichero generado? " -n 1 -r
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+reporte_mail(){
+echo -e "\033[32m Desea enviar por correo el fichero generado? [Yy] [Nn]? \033[0m"
+read REPLY
+if [ $REPLY = "Y" ] || [ $REPLY = "y" ]; then
 	DATE="$(date +%Y%m%d%H%M)"
 	MAILSUBJECT="Reporte generado el dia $DATE"
 	MAILMESSAGE="Se ha generado el siguiente reporte"
@@ -19,15 +28,16 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 }
 
-function reporte_pantalla(){
-read -p "Desea mostrar por pantalla el fichero generado? " -n 1 -r
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+reporte_pantalla(){
+echo -e "\033[32m Desea mostrar por pantalla el fichero generado? [Yy] [Nn]? \033[0m"
+read REPLY
+#if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [ $REPLY = "Y" ] || [ $REPLY = "y" ]; then
 	more $1
 fi
 }
 
-function listados(){
+listados(){
 bpplclients -noheader -allunique | awk '{print $3}' > $NB_CLIENT
 bppllist > $NB_POLICY
 bpstulist -U | grep Label | awk '{print $2}' > $NB_STORAGE_UNITS
@@ -37,15 +47,15 @@ bpmedialist -l -mlist | awk '{print $1}' > $NB_MEDIA_LIST
 ##################################################################
 # Seleccion
 ##################################################################
-function loop_client_id(){
+loop_client_id(){
 echo -e "\033[32m Ingrese el cliente id que corresponda: \033[0m"
 read line
 RESULTADOS=$(grep -i $line $NB_CLIENT | wc -l)
 if [ $(grep -x $line $NB_CLIENT | wc -l) -eq 1 ]; then  #chequeo que coincida unicamente con la palabra ingresada, aunque haya multiples strings
         echo "Desea cambiar: $line (Y to change, any other key to continue)?"
         echo -e "-------------------------------------------"
-        read -p ": "
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
+	read REPLY
+		if [ $REPLY = "Y" ] || [ $REPLY = "y" ]; then
                         loop_client_id
                 else
                         CLIENT_ID=$(grep -x $line $NB_CLIENT)
@@ -54,8 +64,9 @@ if [ $(grep -x $line $NB_CLIENT | wc -l) -eq 1 ]; then  #chequeo que coincida un
 elif [ $RESULTADOS -eq 1 ]; then #chequeo que coincida con al menos uno de las palabras ingresadas
         echo "Desea cambiar: $(grep -i $line $NB_CLIENT) (Y to change, any other key to continue)?"
         echo -e "-------------------------------------------"
-        read -p ": "
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
+	read REPLY
+		if [ $REPLY = "Y" ] || [ $REPLY = "y" ]; then
+
                         loop_client_id
                 else
                         CLIENT_ID=$(grep -i $line $NB_CLIENT)
@@ -74,15 +85,15 @@ else #multiples resultados, voy a loop
 fi
 }
 
-function loop_policy_id(){
+loop_policy_id(){
 echo -e "\033[32m Ingrese la policy id que corresponda: \033[0m"
 read line
 RESULTADOS=$(grep -i $line $NB_POLICY | wc -l)
 if [ $(grep -x $line $NB_POLICY | wc -l) -eq 1 ]; then  #chequeo que coincida unicamente con la palabra ingresada, aunque haya multiples strings
         echo "Desea cambiar: $line (Y to change, any other key to continue)?"
         echo -e "-------------------------------------------"
-        read -p ": "
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
+	read REPLY
+		if [ $REPLY = "Y" ] || [ $REPLY = "y" ]; then
                         loop_client_id
                 else
                         POLICY_ID=$(grep -x $line $NB_POLICY)
@@ -91,8 +102,8 @@ if [ $(grep -x $line $NB_POLICY | wc -l) -eq 1 ]; then  #chequeo que coincida un
 elif [ $RESULTADOS -eq 1 ]; then #chequeo que coincida con al menos uno de las palabras ingresadas
         echo "Desea cambiar: $(grep -i $line $NB_POLICY) (Y to change, any other key to continue)?"
         echo -e "-------------------------------------------"
-        read -p ": "
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
+	read REPLY
+		if [ $REPLY = "Y" ] || [ $REPLY = "y" ]; then
                         loop_policy_id
                 else
                         POLICY_ID=$(grep -i $line $NB_POLICY)
@@ -114,93 +125,95 @@ fi
 ##################################################################
 ## Opciones
 ##################################################################
-function option_1(){
+option_1(){
 bpplclients -noheader -allunique | awk '{print $3}' > $NB_CLIENT
 reporte_pantalla $NB_CLIENT
 reporte_mail $NB_CLIENT
 }
-function option_2(){
+option_2(){
 bpplclients -allunique > $NB_CLIENT_DETAIL
 reporte_pantalla $NB_CLIENT_DETAIL
 reporte_mail $NB_CLIENT_DETAIL
 }
-function option_3(){
+option_3(){
 bppllist > $NB_POLICY
 reporte_pantalla $NB_POLICY
 reporte_mail $NB_POLICY
 }
-function option_4(){
+option_4(){
 bppllist -U -allclasses> $NB_POLICY_DETAIL
 reporte_mail $NB_POLICY_DETAIL
 }
-function option_5(){
+option_5(){
 loop_client_id
 bppllist -U -allclasses -policy $CLIENT_ID > $TMPDIR/nb_policy_detail_$CLIENT_ID.txt
 reporte_pantalla $TMPDIR/nb_policy_detail_$CLIENT_ID.txt
 reporte_mail $TMPDIR/nb_policy_detail_$CLIENT_ID.txt
 }
-function option_30(){
+option_30(){
 loop_client_id
-bpimagelist -U -client $CLIEND_ID -hoursago 168 > $TMPDIR/nb_image_detail_$CLIENT_ID.$DATE.txt
+echo $CLIENTID
+bpimagelist -U -client $CLIENT_ID -hoursago 168 > $TMPDIR/nb_image_detail_$CLIENT_ID.$DATE.txt
 reporte_pantalla $TMPDIR/nb_image_detail_$CLIENT_ID.$DATE.txt
 reporte_mail $TMPDIR/nb_image_detail_$CLIENT_ID.$DATE.txt
 }
-function option_31(){
+option_31(){
 loop_client_id
-bpimagelist -U -client $CLIEND_ID -hoursago 720 > $TMPDIR/nb_image_detail_$CLIENT_ID.$DATE.txt
+bpimagelist -U -client $CLIENT_ID -hoursago 720 > $TMPDIR/nb_image_detail_$CLIENT_ID.$DATE.txt
 reporte_pantalla $TMPDIR/nb_image_detail_$CLIENT_ID.$DATE.txt
 reporte_mail $TMPDIR/nb_image_detail_$CLIENT_ID.$DATE.txt
 }
-function option_32(){
-bperror -U -backstat -s info -hoursago 24 > $TMPDOR/nb_backup_error_$DATE.txt
-reporte_pantalla $TMPDOR/nb_backup_error_$DATE.txt
-reporte_mail $TMPDOR/nb_backup_error_$DATE.txt
-}
-function option_33(){
-bperror -U -backstat -s info -hoursago 168 > $TMPDOR/nb_backup_error_$DATE.txt
-reporte_pantalla $TMPDOR/nb_backup_error_$DATE.txt
-reporte_mail $TMPDOR/nb_backup_error_$DATE.txt
-}
-function option_34(){
-bperror -U -backstat -s error -hoursago 24 > $TMPDOR/nb_backup_error_$DATE.txt
-reporte_pantalla $TMPDOR/nb_backup_error_$DATE.txt
-reporte_mail $TMPDOR/nb_backup_error_$DATE.txt
-}
-function option_35(){
-bperror -U -backstat -s error -hoursago 168 > $TMPDIR/nb_backup_error_$DATE.txt
+option_32(){
+bperror -U -backstat -s info -hoursago 24 > $TMPDIR/nb_backup_error_$DATE.txt
 reporte_pantalla $TMPDIR/nb_backup_error_$DATE.txt
 reporte_mail $TMPDIR/nb_backup_error_$DATE.txt
 }
-function option_36(){
+option_33(){
+bperror -U -backstat -s info -hoursago 168 > $TMPDIR/nb_backup_error_$DATE.txt
+reporte_pantalla $TMPDIR/nb_backup_error_$DATE.txt
+reporte_mail $TMPDIR/nb_backup_error_$DATE.txt
+}
+option_34(){
+bperror -U  -backstat -s info -hoursago 24 | grep -v "  0    " > $TMPDIR/nb_backup_error_$DATE.txt
+reporte_pantalla $TMPDIR/nb_backup_error_$DATE.txt
+reporte_mail $TMPDIR/nb_backup_error_$DATE.txt
+}
+option_35(){
+bperror -U  -backstat -s info -hoursago 168 | grep -v "  0    " > $TMPDIR/nb_backup_error_$DATE.txt
+reporte_pantalla $TMPDIR/nb_backup_error_$DATE.txt
+reporte_mail $TMPDIR/nb_backup_error_$DATE.txt
+}
+option_36(){
 bperror -U -problems -hoursago 24 > $TMPDIR/nb_backup_problem_$DATE.txt
-reporte_pantalla $TMPDIR
-reporte_mail $TMPDIR
+reporte_pantalla $TMPDIR/nb_backup_problem_$DATE.txt
+reporte_mail $TMPDIR/nb_backup_problem_$DATE.txt
 }
-function option_37(){
+option_37(){
 bperror -U -problems -hoursago 168 > $TMPDIR/nb_backup_problem_$DATE.txt
-reporte_pantalla $TMPDIR
-reporte_mail $TMPDIR
+reporte_pantalla $TMPDIR/nb_backup_problem_$DATE.txt
+reporte_mail $TMPDIR/nb_backup_problem_$DATE.txt
 }
-function option_38(){
+option_38(){
 loop_client_id
-bperror -U -problems -hoursago 168 > $TMPDIR/nb_backup_problem_$DATE.txt
-reporte_pantalla $TMPDIR
-reporte_mail $TMPDIR
+bperror -U -problems -hoursago 720 > $TMPDIR/nb_backup_problem_$DATE.txt
+reporte_pantalla $TMPDIR/nb_backup_problem_$DATE.txt 
+reporte_mail $TMPDIR/nb_backup_problem_$DATE.txt
 }
-function option_39(){
+option_39(){
 loop_client_id
-bperror -U -problems -hoursago 168 > $TMPDIR/nb_backup_problem_$DATE.txt
-reporte_pantalla $TMPDIR
-reporte_mail $TMPDIR
+bperror -U -problems -hoursago 168 > $TMPDIR/nb_backup_error_$CLIENTNAME_$DATE.txt
+reporte_pantalla $TMPDIR/nb_backup_error_$CLIENTNAME_$DATE.txt
+reporte_mail $TMPDIR/nb_backup_error_$CLIENTNAME_$DATE.txt
 }
-function option_40(){
+option_40(){
 loop_policy_id
 bpimagelist -U -policy $POLICY_ID > $TMPDIR/nb_policy_$POLICY_ID_$DATE.txt
-reporte_pantalla $TMPDIR
-reporte_mail $TMPDIR
+reporte_pantalla $TMPDIR/nb_policy_$POLICY_ID_$DATE.txt
+reporte_mail $TMPDIR/nb_policy_$POLICY_ID_$DATE.txt
 }
 
 OUTPUT=output.txt
+menu(){
 
 if [ $# != 1 ]
 then
@@ -283,10 +296,10 @@ case $a in
 esac
 
 ## LOOP
-echo -e "\033[32m "
-read -p "Desea ejecutar otra opcion [Yy] [Nn]? " -n 1 -r
-echo -e "\033[0m"
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+echo -e "\033[32m Desea ejecutar otra opcion [Yy] [Nn]? \033[0m"
+read REPLY
+#if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [ $REPLY = "Y" ] || [ $REPLY = "y" ]; then
 	ORG=""
 	menu
 else
